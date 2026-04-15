@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blomdelar – Växla mellan med/utan etiketter</title>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #f5e8c7, #e6d5a8);
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+
+    .header {
+      background: #2c5f2d;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .main {
+      padding: 25px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 25px;
+    }
+
+    .image-area {
+      flex: 1;
+      min-width: 400px;
+      text-align: center;
+    }
+
+    #currentImage {
+      max-width: 100%;
+      max-height: 580px;
+      border: 5px solid #2c5f2d;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+      transition: opacity 0.3s ease;
+    }
+
+    .controls {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      margin: 10px 0;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: #2c5f2d;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #1e4420;
+    }
+
+    .btn-switch {
+      background: #e67e22;
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .btn-switch:hover {
+      background: #d35400;
+    }
+
+    .timer {
+      font-size: 38px;
+      font-weight: bold;
+      text-align: center;
+      color: #d35400;
+      background: #fff8e1;
+      padding: 12px;
+      border-radius: 12px;
+      margin: 15px 0;
+    }
+
+    .small {
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="header">
+      <h1>🌸 Blomdelar – Växla mellan med/utan etiketter</h1>
+      <p>Tryck på knappen eller mellanslag för att växla</p>
+    </div>
+
+    <div class="main">
+
+      <div class="image-area">
+        <img id="currentImage" src="BLOMMA1.jpg" alt="Blomdiagram">
+        <p id="imageInfo" class="small">Visar: Med etiketter</p>
+      </div>
+
+      <div class="controls">
+
+        <button class="btn-switch" onclick="toggleImages()">
+          🔄 VÄXLA MELLAN BILDERNA
+        </button>
+
+        <button class="btn-primary" onclick="startTimer()">
+          Starta 7-minuters minnesprogram
+        </button>
+
+        <button class="btn-primary" onclick="showLabels()">
+          Visa alla namn
+        </button>
+
+        <div class="timer" id="timer">7:00</div>
+
+        <div id="labelList"></div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const imgWith = "BLOMMA1.jpg";
+    const imgWithout = "BLOMMA2.jpg";
+
+    let currentIsWithLabels = true;
+    let timeLeft = 420;
+    let timerInterval = null;
+
+    const currentImage = document.getElementById("currentImage");
+    const imageInfo = document.getElementById("imageInfo");
+    const timerEl = document.getElementById("timer");
+
+    function toggleImages() {
+      currentIsWithLabels = !currentIsWithLabels;
+
+      if (currentIsWithLabels) {
+        currentImage.src = imgWith;
+        imageInfo.textContent = "Visar: Med etiketter";
+      } else {
+        currentImage.src = imgWithout;
+        imageInfo.textContent = "Visar: Utan etiketter";
+      }
+    }
+
+    // Spacebar toggle
+    document.addEventListener("keydown", e => {
+      if (e.key === " ") {
+        e.preventDefault();
+        toggleImages();
+      }
+    });
+
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+
+      timeLeft = 420;
+      timerEl.style.color = "#d35400";
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+
+        const min = Math.floor(timeLeft / 60);
+        const sec = timeLeft % 60;
+
+        timerEl.textContent = `${min}:${sec < 10 ? "0" : ""}${sec}`;
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          timerEl.style.color = "#e74c3c";
+          timerEl.textContent = "Tiden är slut!";
+        }
+      }, 1000);
+    }
+
+    const parts = [
+      "Märke", "Pistill", "Ståndarsträng", "Frö-embryo", "Hylle", "Kronblad",
+      "Foderblad", "Fruktämne", "Nektarie", "Blomaxel", "Artikulation",
+      "Blomskaft", "Konnektiv", "Knapp", "Pollensäck", "Ståndare"
+    ];
+
+    function showLabels() {
+      const list = document.getElementById("labelList");
+      list.innerHTML = "<h3>Delar att kunna:</h3>";
+
+      parts.forEach(part => {
+        const div = document.createElement("div");
+        div.style.padding = "10px";
+        div.style.background = "#f9f4e6";
+        div.style.margin = "6px 0";
+        div.style.borderRadius = "6px";
+        div.textContent = part;
+        list.appendChild(div);
+      });
+    }
+  </script>
+
+</body>
+</html>
